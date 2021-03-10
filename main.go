@@ -43,6 +43,11 @@ func main() {
 			secretFile := c.String("secret-file")
 			isCopy := c.Bool("copy")
 			isQuiet := c.Bool("quiet")
+
+			if secret == "" && secretFile == "" {
+				return cli.ShowAppHelp(c)
+			}
+
 			if secretFile != "" {
 				bs, err := ioutil.ReadFile(secretFile)
 				if err != nil {
