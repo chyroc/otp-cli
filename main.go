@@ -60,7 +60,7 @@ func main() {
 			}
 
 			if isCopy {
-				if err = clipboard.WriteAll(secret); err != nil {
+				if err = clipboard.WriteAll(res); err != nil {
 					return err
 				}
 			}
