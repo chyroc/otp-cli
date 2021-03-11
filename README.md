@@ -8,6 +8,12 @@ otp-cli is a tool for generate otp code in terminal.
 go get github.com/chyroc/otp-cli
 ```
 
+check
+
+```shell
+otp-cli version # expect output: otp-cli version v0.2.0
+```
+
 ## Usage
 
 ```text
