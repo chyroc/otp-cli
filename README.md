@@ -11,7 +11,7 @@ go get github.com/chyroc/otp-cli
 check
 
 ```shell
-otp-cli version # expect output: otp-cli version v0.2.0
+otp-cli version # expect output: otp-cli version v0.3.0
 ```
 
 ## Usage

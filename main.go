@@ -12,7 +12,7 @@ import (
 	"github.com/xlzd/gotp"
 )
 
-const version = "v0.2.0"
+const version = "v0.3.0"
 
 func main() {
 	app := &cli.App{
