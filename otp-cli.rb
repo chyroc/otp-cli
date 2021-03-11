@@ -2,8 +2,8 @@ class OtpCli < Formula
   desc "Tool for generate otp code in terminal"
   homepage "https://github.com/chyroc/otp-cli"
 
-  url "https://github.com/chyroc/otp-cli/releases/download/v0.2.0/otp-cli-0.2.0.tar.gz"
-  sha256 "7e223d86e924e95e722b6c2b69acd0a4963085df2726132fcc6c0731caa93150"
+  url "https://github.com/chyroc/otp-cli/releases/download/v0.3.0/otp-cli-0.3.0.tar.gz"
+  sha256 "b0c3a0afb4f886db32bcc12ed3d6eec985fe9cf4487e4db412557dfbdd5dcafe"
   head "https://github.com/chyroc/otp-cli"
 
   depends_on "go" => :build
@@ -19,8 +19,6 @@ class OtpCli < Formula
   end
 
   test do
-    # "2>&1" redirects standard error to stdout. The "2" at the end means "the
-    # exit code should be 2".
-    assert_match "otp-cli", shell_output("#{bin}/otp-cli -h 2>&1", 2)
+    assert_equal "otp-cli version v0.3.0\n", shell_output("#{bin}/otp-cli version")
   end
 end
