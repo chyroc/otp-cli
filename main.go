@@ -12,6 +12,8 @@ import (
 	"github.com/xlzd/gotp"
 )
 
+const version = "v0.2.0"
+
 func main() {
 	app := &cli.App{
 		Name:  "otp-cli",
@@ -75,6 +77,16 @@ func main() {
 			}
 
 			return nil
+		},
+		Commands: []*cli.Command{
+			{
+				Name:  "version",
+				Usage: "show otp-cli version",
+				Action: func(c *cli.Context) error {
+					fmt.Println("otp-cli version " + version)
+					return nil
+				},
+			},
 		},
 	}
 

@@ -1,5 +1,5 @@
 class OtpCli < Formula
-  desc "otp-cli is a tool for generate otp code in terminal."
+  desc "Tool for generate otp code in terminal"
   homepage "https://github.com/chyroc/otp-cli"
 
   url "https://github.com/chyroc/otp-cli/releases/download/v0.2.0/otp-cli-0.2.0.tar.gz"
@@ -14,7 +14,7 @@ class OtpCli < Formula
     bin_path = buildpath/"src/github.com/chyroc/otp-cli"
     bin_path.install Dir["*"]
     cd bin_path do
-      system "go", "build", "-o", bin/"otp-cli", "."
+      system "go", "build", *std_go_args
     end
   end
 
@@ -22,12 +22,5 @@ class OtpCli < Formula
     # "2>&1" redirects standard error to stdout. The "2" at the end means "the
     # exit code should be 2".
     assert_match "otp-cli", shell_output("#{bin}/otp-cli -h 2>&1", 2)
-  end
-
-  def caveats; <<~EOS
-    otp-cli has been installed, have fun!
-    More information:
-      https://github.com/chyroc/otp-cli
-  EOS
   end
 end
