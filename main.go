@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -23,21 +22,25 @@ func main() {
 				Name:    "secret",
 				Aliases: []string{"s"},
 				Usage:   "otp secret text",
+				EnvVars: []string{"OTP_SECRET"},
 			},
 			&cli.StringFlag{
 				Name:    "secret-file",
 				Aliases: []string{"f"},
 				Usage:   "otp secret file",
+				EnvVars: []string{"OTP_SECRET_FILE"},
 			},
 			&cli.BoolFlag{
 				Name:    "copy",
 				Aliases: []string{"c"},
 				Usage:   "copy to clipboard",
+				EnvVars: []string{"OTP_COPY"},
 			},
 			&cli.BoolFlag{
 				Name:    "quiet",
 				Aliases: []string{"q"},
 				Usage:   "not output to console",
+				EnvVars: []string{"OTP_QUIET"},
 			},
 		},
 		Action: func(c *cli.Context) error {
@@ -51,7 +54,7 @@ func main() {
 			}
 
 			if secretFile != "" {
-				bs, err := ioutil.ReadFile(secretFile)
+				bs, err := os.ReadFile(secretFile)
 				if err != nil {
 					return err
 				}
