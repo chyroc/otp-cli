@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/atotto/clipboard"
@@ -30,6 +32,11 @@ func main() {
 				Usage:   "otp secret file",
 				EnvVars: []string{"OTP_SECRET_FILE"},
 			},
+			&cli.StringFlag{
+				Name:    "scope",
+				Usage:   "otp scope",
+				EnvVars: []string{"OTP_SCOPE"},
+			},
 			&cli.BoolFlag{
 				Name:    "copy",
 				Aliases: []string{"c"},
@@ -48,6 +55,14 @@ func main() {
 			secretFile := c.String("secret-file")
 			isCopy := c.Bool("copy")
 			isQuiet := c.Bool("quiet")
+			scope := c.String("scope")
+
+			if scope != "" {
+				bs, _ := ioutil.ReadFile(getScopeSecretFile(scope))
+				if len(bs) != 0 {
+					secret = string(bs)
+				}
+			}
 
 			if secret == "" && secretFile == "" {
 				return cli.ShowAppHelp(c)
@@ -90,6 +105,53 @@ func main() {
 					return nil
 				},
 			},
+			{
+				Name:  "set-scope",
+				Usage: "set scope secret",
+				// otp-cli set-scope --name github --secret xxx
+				Flags: []cli.Flag{
+					&cli.StringFlag{Name: "name", Usage: "scope name", Required: true},
+					&cli.StringFlag{Name: "secret", Usage: "scope secret", Required: true},
+				},
+				Action: func(c *cli.Context) error {
+					name := c.String("name")
+					secret := c.String("secret")
+					if name == "" || secret == "" {
+						return cli.ShowCommandHelp(c, "set-scope")
+					}
+
+					secretFile := getScopeSecretFile(name)
+					if err := os.MkdirAll(filepath.Dir(secretFile), 0755); err != nil {
+						return err
+					}
+					if err := os.WriteFile(secretFile, []byte(secret), 0644); err != nil {
+						return err
+					}
+					log.Printf("set scope %s success", name)
+					return nil
+				},
+			},
+			{
+				Name:  "del-scope",
+				Usage: "delete scope secret",
+				// otp-cli del-scope --name github
+				Flags: []cli.Flag{
+					&cli.StringFlag{Name: "name", Usage: "scope name", Required: true},
+				},
+				Action: func(c *cli.Context) error {
+					name := c.String("name")
+					if name == "" {
+						return cli.ShowCommandHelp(c, "del-scope")
+					}
+
+					secretFile := getScopeSecretFile(name)
+					if err := os.Remove(secretFile); err != nil {
+						return err
+					}
+					log.Printf("delete scope %s success", name)
+					return nil
+				},
+			},
 		},
 	}
 
@@ -107,4 +169,16 @@ func generate(secret string) (s string, err error) {
 		}
 	}()
 	return gotp.NewDefaultTOTP(strings.ToUpper(strings.Replace(secret, " ", "", -1))).Now(), nil
+}
+
+func getWorkDir() string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+	return home + "/.local/otp-cli"
+}
+
+func getScopeSecretFile(scope string) string {
+	return fmt.Sprintf("%s/.otp-cli/%s.secret.txt", getWorkDir(), scope)
 }
