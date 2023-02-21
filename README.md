@@ -33,12 +33,15 @@ USAGE:
    otp-cli [global options] command [command options] [arguments...]
 
 COMMANDS:
-   version  show otp-cli version
-   help, h  Shows a list of commands or help for one command
+   version    show otp-cli version
+   set-scope  set scope secret
+   del-scope  delete scope secret
+   help, h    Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
    --secret value, -s value       otp secret text [$OTP_SECRET]
    --secret-file value, -f value  otp secret file [$OTP_SECRET_FILE]
+   --scope value                  otp scope [$OTP_SCOPE]
    --copy, -c                     copy to clipboard (default: false) [$OTP_COPY]
    --quiet, -q                    not output to console (default: false) [$OTP_QUIET]
    --help, -h                     show help
@@ -54,6 +57,16 @@ otp-cli -s '<secret>'
 
 ```shell
 otp-cli -f '<secret file>'
+```
+
+- ***generate from scope***
+
+```shell
+# first: config scope
+otp-cli set-scope --name <scope> --secret <secret>
+
+# second: generate
+otp-cli --scope <scope>
 ```
 
 - ***generate and copy to clipboard***
